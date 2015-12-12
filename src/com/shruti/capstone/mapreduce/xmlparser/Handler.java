@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.xmlparser;
+/*
+ * Capstone project by Shruti Gorde
+ * class to traverse the word file element by element.
+ * 
+ */
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,9 @@
 package com.shruti.capstone;
+/*
+ * Capstone project by Shruti Gorde
+ * getter and setter class for contents and messages
+ * 
+ */
 import java.io.Serializable;
 
 public class Memo implements Serializable {

@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.xmlparser;
+/*
+ * Capstone project by Shruti Gorde
+ * 
+ * 
+ */
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;

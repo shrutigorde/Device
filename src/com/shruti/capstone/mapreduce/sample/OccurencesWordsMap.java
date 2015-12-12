@@ -1,5 +1,9 @@
 package com.shruti.capstone.mapreduce.sample;
-
+/*
+ * Capstone project by Shruti Gorde
+ * class to count the occurences of the word in input file
+ * 
+ */
 import java.io.File;
 
 /**
@@ -57,7 +61,7 @@ import com.shruti.capstone.mapreduce.resultdownload.InputFiles;
 import com.shruti.capstone.mapreduce.sendResult.SendResult;
 
 public class OccurencesWordsMap implements Mapping<String, Integer> {
-
+//defining the map job
 	public void map(MapReduce context, String... params) throws IOException {
 		Log.i(this.getClass().getSimpleName(), "doing the task....");
 		List<String> list  = new ArrayList<String>();
@@ -99,7 +103,7 @@ public class OccurencesWordsMap implements Mapping<String, Integer> {
 			return 0;
 		}
 	}
-
+//print the words with its count
 	public static void display(TreeMap<String, Integer> data) {
 
 		for (String d : data.keySet()) {
@@ -110,6 +114,7 @@ public class OccurencesWordsMap implements Mapping<String, Integer> {
 	}
 
 	@SuppressWarnings("resource")
+	//traverse  the text file
 	public static void gothroughtextfile(TreeMap<String, Integer> data,List<String> params) {
 		Scanner textFile;
 		String word; 

@@ -1,5 +1,9 @@
 package com.shruti.capstone.mapreduce.TaskTracker;
-
+/*
+ * Capstone project by Shruti Gorde
+ * 
+ * 
+ */
 public enum StateOfTask {
-	RUNNING, SUCCEEDED, FAILED, UNASSIGNED, KILLED, COMMIT_PENDING, FAILED_UNCLEAN, KILLED_UNCLEAN
+	KILLED,  FAILED_UNCLEAN,RUNNING, FAILED,COMMIT_PENDING, SUCCEEDED,  UNASSIGNED,  KILLED_UNCLEAN
 }

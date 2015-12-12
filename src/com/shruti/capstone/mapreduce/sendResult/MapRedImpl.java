@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.sendResult;
+/*
+ * Capstone project by Shruti Gorde
+ * 
+ * 
+ */
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +23,7 @@ public class MapRedImpl<K, V,File> implements MapReduce<K, V,File> {
 	public void mapSet() {
 		
 	}
-
+//generate the output file in the device
 	public void generate(K key, V value, File outputFile,Boolean... bool) {
 
 		if (key != null && value != null) {
@@ -51,5 +56,5 @@ public class MapRedImpl<K, V,File> implements MapReduce<K, V,File> {
 }
 
 enum FileType {
-	PROPERTY, TEXT
+	TEXT,PROPERTY
 }

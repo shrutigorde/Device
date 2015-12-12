@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.xmlparser;
+/*
+ * Capstone project by Shruti Gorde
+ * getter setter to get the parameters from xml file.
+ * 
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,10 +114,9 @@ public class Response implements Comparable<Response> {
 		return true;
 	}
 
-	public int compareTo(Response another) {
-		if (another == null)
+	public int compareTo(Response word) {
+		if (word == null)
 			return 1;
-		// implement sorting logic here
 		return 1;
 	}
 }

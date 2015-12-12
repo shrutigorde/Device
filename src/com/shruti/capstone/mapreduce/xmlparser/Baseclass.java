@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.xmlparser;
+/*
+ * Capstone project by Shruti Gorde
+ * class to parse the xml file
+ * 
+ */
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;

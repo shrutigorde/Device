@@ -1,5 +1,9 @@
 package com.shruti.capstone.mapreduce.sample;
-
+/*
+ * Capstone project by Shruti Gorde
+ * class to perform reduction
+ * 
+ */
 import java.util.Map;
 import java.util.TreeMap;
 

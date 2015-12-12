@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.resultdownload;
+/*
+ * Capstone project by Shruti Gorde
+ * class for defining path for the input files
+ * to be downloaded from the server
+ */
 import android.os.Environment;
 
 public class InputFiles {

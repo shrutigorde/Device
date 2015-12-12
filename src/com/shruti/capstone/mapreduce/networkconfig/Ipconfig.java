@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.networkconfig;
+/*
+ * Capstone project by Shruti Gorde
+ * class for ip configuration and socket connection
+ * 
+ */
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
@@ -13,7 +18,7 @@ import com.shruti.capstone.Memokind;
 import android.util.Log;
 
 public class Ipconfig {
-
+//get the IP address of the server
 	public static String getServerIP() {
 		try {
 			for (Enumeration<NetworkInterface> netin = NetworkInterface
@@ -34,7 +39,7 @@ public class Ipconfig {
 	}
 
 	public static final String LaptopIP = System.getProperty("ipAddress",
-			"192.168.0.4"); 
+			"192.168.0.4"); //change the ip address accordingly
 	public static final int LaptopPort = Integer.parseInt(System.getProperty(
 			"port", "4443")); 
 

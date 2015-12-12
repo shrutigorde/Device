@@ -1,4 +1,9 @@
 package com.shruti.capstone.mapreduce.sendResult;
+/*
+ * Capstone project by Shruti Gorde
+ * class to send the result file to the server
+ * 
+ */
 import android.os.Environment;
 
 public class SendResult {

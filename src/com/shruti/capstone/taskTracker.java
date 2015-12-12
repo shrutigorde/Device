@@ -1,4 +1,9 @@
 package com.shruti.capstone;
+/*
+ * Capstone project by Shruti Gorde
+ * task tracker class to keep track of all the tasks
+ * 
+ */
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -35,6 +40,7 @@ import com.shruti.capstone.mapreduce.xmlparser.XMLParser;
 public class taskTracker extends AsyncTask<URL, Integer, Long> {
 
 	@Override
+	//connecting to the server
 	protected Long doInBackground(URL... arg0) {
 		Socket soc = new Socket();
 		SocketAddress IPaddress = new InetSocketAddress(Ipconfig.LaptopIP,
@@ -48,55 +54,53 @@ public class taskTracker extends AsyncTask<URL, Integer, Long> {
 			System.out.println("inside catch");
 		}
 
-		executeBeforeDownload(soc);
-		downloadFile(soc);
-		List<Response> messages = parseMapTask(TypeXML.SIMPLE, soc);
-		performAction(messages, soc);
+		deletePreviousFiles(soc);
+		inputFiles(soc);
+		List<Response> msgs = parseMapTask(TypeXML.SIMPLE, soc);
+		processing(msgs, soc);
 
 		return null;
 	}
-
-	private void executeBeforeDownload(Socket soc) {		
-		Log.i(this.getClass().getSimpleName(), "Removing the old files, if download previously.....");		
-			File file = new File(InputFiles.Path_Download);
-			if (file.isDirectory()) {
-		        String[] children = file.list();
-		        for (int i = 0; i < children.length; i++) {
-		            new File(file, children[i]).delete();
+	// delete all the existing previous files that were
+	//downloaded from the server
+	private void deletePreviousFiles(Socket soc) {		
+		Log.i(this.getClass().getSimpleName(), "previous files deleting...");		
+			File f = new File(InputFiles.Path_Download);
+			if (f.isDirectory()) {
+		        String[] files = f.list();
+		        for (int i = 0; i < files.length; i++) {
+		            new File(f, files[i]).delete();
 		        }
 		    }			
 			Log.i(this.getClass().getSimpleName(),
-				"Previous job file removed successfully....");					
+				"deleted...");					
 	}
-
-	private void performReduceAction(Socket soc) {
+	//perform reduction
+	private void reducing(Socket soc) {
 		FileOutputStream fos = null;
 		try {
-			Log.i(this.getClass().getSimpleName(),
-					"Waiting for Reduce Job.....");
-			ObjectInputStream fromServer = new ObjectInputStream(
+			
+			ObjectInputStream serverside = new ObjectInputStream(
 					soc.getInputStream());
-			com.shruti.capstone.Memo message = (com.shruti.capstone.Memo) fromServer
+			com.shruti.capstone.Memo reply = (com.shruti.capstone.Memo) serverside
 					.readObject();
-			Log.i(this.getClass().getSimpleName(),
-					"Recieve Message object for Reduce Job at client side....");
+			
 
-			if (Memokind.REDUCE.equals(message.getMemoKind())) {
+			if (Memokind.REDUCE.equals(reply.getMemoKind())) {
 
 				File file = new File(InputFiles.Path_Download);
 				file.mkdirs();
 				File outputFile = new File(file,
 						InputFiles.File_red);
 				fos = new FileOutputStream(outputFile);
-				fos.write(message.getcontent());
+				fos.write(reply.getcontent());
 				fos.close();
 				Log.i(this.getClass().getSimpleName(),
-						"Client docs downloaded successfully....");
+						"sucessfully downloaded input files..");
 			}
 		} catch (IOException e) {
 			Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			try {
@@ -108,8 +112,8 @@ public class taskTracker extends AsyncTask<URL, Integer, Long> {
 		}
 
 	}
-
-	private static void downloadFile(Socket soc) {
+//download the xml and text files from the server
+	private static void inputFiles(Socket soc) {
 		TaskMapper mapTask = new TaskMapper();
 		mapTask.taskdownload(soc);
 		try {
@@ -120,44 +124,39 @@ public class taskTracker extends AsyncTask<URL, Integer, Long> {
 		}
 		
 	}
-
+//parsing the xml file
 	private static List<Response> parseMapTask(TypeXML type, Socket soc) {
 		Parsing parser = XMLParser.getXML(type, soc);
 		return parser.xmlparsing();
 	}
+//doing the map processing
+	private static void processing(List<Response> responses, Socket soc) {
 
-	private static void performAction(List<Response> messages, Socket soc) {
-
-		Log.i(taskTracker.class.getSimpleName(), "" + messages.size());
-		for (int i = 0; i < messages.size(); i++) {
-			Response message = messages.get(i);
-			String classPackage = message.getTilte();
-			Log.i(taskTracker.class.getSimpleName(), classPackage);
+		Log.i(taskTracker.class.getSimpleName(), "" + responses.size());
+		for (int i = 0; i < responses.size(); i++) {
+			Response res = responses.get(i);
+			String pckg = res.getTilte();
+			Log.i(taskTracker.class.getSimpleName(), pckg);
 			try {
-				Class klaz = Class.forName(classPackage);
-				// TODO enum valueOf
-				Mapping mapper = null;
-				// if ("MAP".equals(message.getActionType())) {
-				mapper = (Mapping) klaz.newInstance();
-				// }
-				List<String> params = message.getValues();
+				Class newclass = Class.forName(pckg);
+				Mapping maptask = null;
+				maptask = (Mapping) newclass.newInstance();
+				List<String> keyvalue = res.getValues();
 				String[] paramArr = null;
 
-				if (params != null) {
+				if (keyvalue != null) {
 					Log.i(taskTracker.class.getName(),
-							"params is " + params.toString());
-					paramArr = new String[params.size()];
-					paramArr = params.toArray(paramArr);
+							"parameters are " + keyvalue.toString());
+					paramArr = new String[keyvalue.size()];
+					paramArr = keyvalue.toArray(paramArr);
 					Log.i(taskTracker.class.getName(),
-							"No. of parameters received by android = "
-									+ params.size());
+							"total numner of input words to count::"
+									+ keyvalue.size());
 				}
-				Log.i(taskTracker.class.getName(), "Running word count task...");
-
-				// Map<String, Integer> resultMap = handler.execute(stockArr);
-				MapReduce context = new MapRedImpl();				
-				mapper.map(context, paramArr);
-				sendResponseToServer(soc);
+				
+				MapReduce mr = new MapRedImpl();				
+				maptask.map(mr, paramArr);
+				resultfilesend(soc);
 			} catch (ClassNotFoundException e) {
 				Log.e(taskTracker.class.getSimpleName(), e.getMessage(), e);
 			} catch (InstantiationException e) {
@@ -171,53 +170,53 @@ public class taskTracker extends AsyncTask<URL, Integer, Long> {
 		}
 	}
 
-	public static String[] getKeyValueArray(Map<String, Integer> resultMap) {
-		String[] keyValueArray = new String[resultMap.size()];
+	public static String[] getpairs(Map<String, Integer> resmr) {
+		String[] arrpairs = new String[resmr.size()];
 		int i = 0;
-		for (String word : resultMap.keySet()) {
-			keyValueArray[i] = word + "=" + resultMap.get(word);
+		for (String word : resmr.keySet()) {
+			arrpairs[i] = word + "=" + resmr.get(word);
 			i++;
 		}
 
-		return keyValueArray;
+		return arrpairs;
 
 	}
-
-	public static void sendResponseToServer(Socket soc) {
+//sending the result file to the server
+	public static void resultfilesend(Socket soc) {
 
 		File file = new File(SendResult.Result_filedir);
 		if (!file.exists()) {
-			Log.e(taskTracker.class.getName(), "Response file not created!");
+			Log.e(taskTracker.class.getName(), "result not generated...!");
 			return;
 		}
-		File responseFile = new File(file,
+		File resFile = new File(file,
 				"result2.txt");
 
-		byte[] responseFileContent = new byte[(int) responseFile.length()];
-	System.out.println(responseFileContent); 
+		byte[] bytesbuffer = new byte[(int) resFile.length()];
+	System.out.println(bytesbuffer); 
 		FileInputStream fis;
 		try {
-			fis = new FileInputStream(responseFile);
+			fis = new FileInputStream(resFile);
 			BufferedInputStream bis = new BufferedInputStream(fis);
-			bis.read(responseFileContent, 0, responseFileContent.length);
+			bis.read(bytesbuffer, 0, bytesbuffer.length);
 			com.shruti.capstone.Memo message = new com.shruti.capstone.Memo();
 			message.setMemoKind(Memokind.ANSWER);
-			message.setcontent(responseFileContent);
-			ObjectOutputStream toServer = new ObjectOutputStream(
+			message.setcontent(bytesbuffer);
+			ObjectOutputStream send = new ObjectOutputStream(
 					soc.getOutputStream());
-			 OutputStreamWriter osw = new OutputStreamWriter(toServer);
+			 OutputStreamWriter osw = new OutputStreamWriter(send);
 	            BufferedWriter bw = new BufferedWriter(osw);
-			toServer.reset();
-			toServer.writeObject(message);
-			toServer.writeObject(responseFile.getName());
-			toServer.close();
-			toServer.flush();
+			send.reset();
+			send.writeObject(message);
+			send.writeObject(resFile.getName());
+			send.close();
+			send.flush();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Sending response file ...");
+		System.out.println("Sending output file ...");
 	}
 }

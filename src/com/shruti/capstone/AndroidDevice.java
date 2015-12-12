@@ -1,5 +1,9 @@
 package com.shruti.capstone;
-
+/*
+ * Capstone project by Shruti Gorde
+ * class that starts the android activity
+ * 
+ */
 import android.app.Activity;
 import android.os.Bundle;
 
