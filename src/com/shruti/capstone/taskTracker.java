@@ -200,7 +200,7 @@ public class taskTracker extends AsyncTask<URL, Integer, Long> {
 			BufferedInputStream bis = new BufferedInputStream(fis);
 			bis.read(bytesbuffer, 0, bytesbuffer.length);
 			com.shruti.capstone.Memo message = new com.shruti.capstone.Memo();
-			message.setMemoKind(Memokind.ANSWER);
+			message.setMemoKind(Memokind.RESPONSE);
 			message.setcontent(bytesbuffer);
 			ObjectOutputStream send = new ObjectOutputStream(
 					soc.getOutputStream());

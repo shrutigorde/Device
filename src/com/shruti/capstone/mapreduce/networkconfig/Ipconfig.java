@@ -46,7 +46,7 @@ public class Ipconfig {
 	public static void doTaskRequest(Socket socket) throws IOException {
 
 		Memo msg = new Memo();
-		msg.setMemoKind(Memokind.READY);
+		msg.setMemoKind(Memokind.TASK_SET);
 		ObjectOutputStream oos = new ObjectOutputStream(
 				socket.getOutputStream());
 		oos.reset();
